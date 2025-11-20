@@ -25,16 +25,9 @@ export default function CartContainer({
               Empty Cart
             </button>
             <button id="BuyButton">
-              Checkout:{" $"}
-              {cartList
-                .reduce(
-                  (total, item) =>
-                    total +
-                    parseFloat(item.price.replace("$", "")) * item.quantity,
-                  0
-                )
-                .toFixed(2)}
-            </button>
+       Checkout
+</button>
+
           </div>
         </>
       ) : (

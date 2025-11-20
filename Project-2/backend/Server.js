@@ -29,10 +29,9 @@ mongoose
 
 // Routes
 server.get("/", (request, response) => {
-  response.send("COMP905 Project 2 Backend Server - Live");
+  response.send("Project 2 - Live");
 });
 
-// GET all products
 server.get("/api/products", async (request, response) => {
   try {
     const products = await Product.find();
@@ -42,7 +41,6 @@ server.get("/api/products", async (request, response) => {
   }
 });
 
-// POST create new product
 server.post("/api/products", async (request, response) => {
   const { id, productName, brand, image, price, quantity } = request.body;
 
@@ -63,7 +61,6 @@ server.post("/api/products", async (request, response) => {
   }
 });
 
-// DELETE product
 server.delete("/api/products/:id", async (request, response) => {
   const { id } = request.params;
 
@@ -75,7 +72,6 @@ server.delete("/api/products/:id", async (request, response) => {
   }
 });
 
-// PATCH update product
 server.patch("/api/products/:id", async (request, response) => {
   const { id } = request.params;
   const { productName, brand, image, price, quantity } = request.body;

@@ -1,9 +1,10 @@
-// Initialize mongoose
+// Import mongoose 
 const mongoose = require("mongoose");
 
-// Define the schema for the product model
+// Define schema for product data 
 const Schema = mongoose.Schema;
 
+// Product schema definition matching the JSON data 
 const productSchema = new Schema({
   id: {
     type: String,
@@ -11,15 +12,15 @@ const productSchema = new Schema({
   },
   productName: {
     type: String,
-    required: true,
+    required: true, 
   },
   brand: {
     type: String,
-    required: true,
+    required: true, 
   },
   image: {
     type: String,
-    required: true,
+    required: true, 
   },
   price: {
     type: String,
@@ -27,11 +28,10 @@ const productSchema = new Schema({
   },
   quantity: {
     type: String,
-    required: true,
+    required: true, 
   }
 });
 
-// Create the model for the product schema
+// Create Product model
 const Product = mongoose.model("Product", productSchema, "products");
-
 module.exports = Product;
