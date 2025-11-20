@@ -4,7 +4,7 @@ import GroceriesAppContainer from "./Components/GroceriesAppContainer";
 function App() {
   return (
     <>
-      <GroceriesAppContainer />
+      <GroceriesAppContainer /> {/* CHANGED: Added "C" */}
     </>
   );
 }
