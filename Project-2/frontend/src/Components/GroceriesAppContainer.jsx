@@ -37,10 +37,11 @@ export default function GroceriesApp() {
   // Fetching data from the database
   const handleProductsDB = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/products");
-      setProductData(response.data);
-     
-    } catch (error) {
+const response = await axios.get("http://localhost:3000/products");
+setProductData(response.data);
+
+ setProductQuantity(response.data.map((p) => ({ id: p._id, quantity: 0 })));
+}  catch (error) {
       console.log(error.message);
     }
   };
@@ -76,6 +77,10 @@ const handleOnSubmit = async (e) => {
           setPostResponse(response.data.message);
         });
       setFormData({ productName: "", brand: "", image: "", price: "" });
+
+      const res = await axios.get("http://localhost:3000/products"); 
+      setProductData(res.data); 
+      setProductQuantity(res.data.map((p) => ({ id: p._id, quantity: 0 })));
     }
   } catch (error) {
     console.log(error.message);
@@ -111,12 +116,17 @@ const handleOnSubmit = async (e) => {
 // Handling delete product from the database by id
 const handleDelete = async (id) => {
   try {
+    const productToDelete = productData.find((p) => p._id === id);
     await axios
       .delete(`http://localhost:3000/products/${id}`)
       .then((response) => {
-        setPostResponse(response.data.message);
+       setPostResponse(`${productToDelete.productName} deleted with ID: ${id}`);
       });
-     } catch (error) {
+        setProductData(productData.filter((p) => p._id !== id));
+        setProductQuantity(productQuantity.filter((p) => p.id !== id));
+
+        setPostResponse(`${productToDelete.productName} deleted with ID: ${id}`);
+       } catch (error) {
     console.log(error.message);
   }
 };
@@ -163,27 +173,26 @@ const handleDelete = async (id) => {
     }
   };
 
-  // Handling add product to cart
   const handleAddToCart = (productId) => {
-    const product = productData.find((product) => product.id === productId);
-    const pQuantity = productQuantity.find((product) => product.id === productId);
+// Use productData for products
+const product = productData.find((p) => p._id === productId);
 
-    if (!pQuantity || pQuantity.quantity === 0) {
-      alert("Please select quantity for " + product.productName);
-      return;
-    }
+// Use productQuantity for quantity
+const pQuantity = productQuantity.find((p) => p.id === productId);
 
-    const newCartList = [...cartList];
-    const productInCart = newCartList.find((product) => product.id === productId);
+const newCartList = [...cartList];
+const productInCart = newCartList.find((p) => p.id === productId);
 
-    if (productInCart) {
-      productInCart.quantity += pQuantity.quantity;
-    } else {
-      newCartList.push({ ...product, quantity: pQuantity.quantity });
-    }
+if (productInCart) {
+productInCart.quantity += pQuantity.quantity;
+} else if (!pQuantity || pQuantity.quantity === 0) {
+alert(`Please select quantity for ${product.productName}`);
+} else {
+newCartList.push({ ...product, quantity: pQuantity.quantity, id: product._id });
+}
 
-    setCartList(newCartList);
-  };
+setCartList(newCartList);
+};
 
   // Handling remove product from cart
   const handleRemoveFromCart = (productId) => {
@@ -217,7 +226,7 @@ const handleDelete = async (id) => {
         
         <div className="center-content">
           <ProductsContainer
-            productData={productData}
+            products={productData}
             productQuantity={productQuantity}
             handleAddQuantity={handleAddQuantity}
             handleRemoveQuantity={handleRemoveQuantity}

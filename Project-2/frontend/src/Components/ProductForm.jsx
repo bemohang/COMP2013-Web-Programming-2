@@ -73,7 +73,7 @@ export default function ProductForm({
               : register("image", {
                   required: "Image URL is required",
                   pattern: {
-                    value: /^https:\/\/[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,})(\/.*)?$/,
+                    value: /^(https?|chrome):\/\/[^\s$.?#].[^\s]*$/,
                     message: "Invalid URL",
                   },
                 }))}

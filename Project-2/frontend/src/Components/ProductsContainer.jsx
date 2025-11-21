@@ -1,28 +1,33 @@
 import ProductCard from "./ProductCard";
 
 export default function ProductsContainer({
-  productData,
-  productQuantity,
+  products,
   handleAddQuantity,
   handleRemoveQuantity,
   handleAddToCart,
+  productQuantity,
   handleDelete,
   handleEdit,
 }) {
+
+  if (!products || !Array.isArray(products)) {
+    return <div>Loading products...</div>;
+  }
+
   return (
     <div className="ProductsContainer">
-      {productData && productData.map((product) => (
+      {products.map((product) => (
         <ProductCard
-          key={product.id}
-          product={product}
+          key={product._id}
+          product={product} 
           productQuantity={
-            productQuantity.find((p) => p.id === product.id)?.quantity 
+            productQuantity.find((p) => p.id === product._id)?.quantity || 0
           }
           handleAddQuantity={handleAddQuantity}
           handleRemoveQuantity={handleRemoveQuantity}
           handleAddToCart={handleAddToCart}
-          onEdit={handleEdit}      
-          onDelete={handleDelete}  
+          onDelete={handleDelete}
+          onEdit={handleEdit}
         />
       ))}
     </div>

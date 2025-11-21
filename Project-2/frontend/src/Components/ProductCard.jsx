@@ -6,28 +6,39 @@ export default function ProductCard({
   handleAddQuantity,
   handleRemoveQuantity,
   handleAddToCart,
-  onEdit,    
-  onDelete,  
+  onEdit,
+  onDelete,
 }) {
+
+  // Prevent crash if product is undefined
+  if (!product) return null;
+
   return (
     <div className="ProductCard">
       <h3>{product.productName}</h3>
       <img src={product.image} alt={product.productName} />
       <h4>{product.brand}</h4>
+
       <QuantityCounter
-        id={product.id}
+        id={product._id}
         mode="product"
         productQuantity={productQuantity}
         handleAddQuantity={handleAddQuantity}
         handleRemoveQuantity={handleRemoveQuantity}
       />
-      <b>{product.price}</b><br></br>
-      <button onClick={() => handleAddToCart(product.id)}>Add to Cart</button>
+
+      <b>{product.price}</b><br />
+
+      <button onClick={() => handleAddToCart(product._id)}>
+        Add to Cart
+      </button>
+
       <div>
         <button onClick={() => onEdit(product)} className="edit-btn">
           Edit
         </button>
-        <button onClick={() => onDelete(product.id)} className="delete-btn">
+
+        <button onClick={() => onDelete(product._id)} className="delete-btn">
           Delete
         </button>
       </div>
