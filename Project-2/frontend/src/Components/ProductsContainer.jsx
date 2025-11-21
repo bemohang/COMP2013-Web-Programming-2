@@ -16,13 +16,13 @@ export default function ProductsContainer({
           key={product.id}
           product={product}
           productQuantity={
-            productQuantity.find((p) => p.id === product.id)?.quantity || 0
+            productQuantity.find((p) => p.id === product.id)?.quantity 
           }
           handleAddQuantity={handleAddQuantity}
           handleRemoveQuantity={handleRemoveQuantity}
           handleAddToCart={handleAddToCart}
-          onEdit={handleEdit}      // Pass handleEdit as onEdit
-          onDelete={handleDelete}  // Pass handleDelete as onDelete
+          onEdit={handleEdit}      
+          onDelete={handleDelete}  
         />
       ))}
     </div>

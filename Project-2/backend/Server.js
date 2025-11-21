@@ -1,12 +1,11 @@
-// Initiate the server and connect to the database
+//Initiate the serve and connect to the database
 const express = require("express");
 const server = express();
-const port = 5000;
+const port = 3000;
 const { request, response } = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 require("dotenv").config();
-
 const { DB_URI } = process.env;
 const Product = require("./models/product");
 
@@ -15,24 +14,24 @@ server.use(express.json());
 server.use(express.urlencoded({ extended: true }));
 server.use(cors());
 
-// Connect to the database
-mongoose
-  .connect(DB_URI)
+//connect to database
+mongoose.connect(DB_URI)
   .then(() => {
     server.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
+       console.log(`Server is running on port ${port}`);
     });
   })
   .catch((error) => {
-    console.log("Error connecting to the database", error.message);
+    console.log("Error connecting to database: " ,error.message);
   });
 
-// Routes
+  //Routes
 server.get("/", (request, response) => {
   response.send("Project 2 - Live");
 });
 
-server.get("/api/products", async (request, response) => {
+// Get all products
+server.get("/products", async (request, response) => {
   try {
     const products = await Product.find();
     response.send(products);
@@ -41,18 +40,15 @@ server.get("/api/products", async (request, response) => {
   }
 });
 
-server.post("/api/products", async (request, response) => {
-  const { id, productName, brand, image, price, quantity } = request.body;
-
+// Add new product
+server.post("/add-product", async (request, response) => {
+  const { productName, brand, image, price } = request.body;
   const newProduct = new Product({
-    id,
     productName,
     brand,
     image,
     price,
-    quantity
   });
-
   try {
     await newProduct.save();
     response.status(201).json({ message: "Product added successfully" });
@@ -61,33 +57,36 @@ server.post("/api/products", async (request, response) => {
   }
 });
 
-server.delete("/api/products/:id", async (request, response) => {
+// Delete product
+server.delete("/products/:id", async (request, response) => {
   const { id } = request.params;
-
+  const objectId = new mongoose.Types.ObjectId(id); 
   try {
-    await Product.findOneAndDelete({ id: id });
+    await Product.findByIdAndDelete(objectId);
     response.status(200).json({ message: "Product deleted successfully" });
   } catch (error) {
     response.status(404).json({ message: error.message });
   }
 });
 
-server.patch("/api/products/:id", async (request, response) => {
+// Update product
+server.patch("/products/:id", async (request, response) => {
   const { id } = request.params;
-  const { productName, brand, image, price, quantity } = request.body;
-
+  const { productName, brand, image, price } = request.body;
+  const objectId = new mongoose.Types.ObjectId(id);
   try {
-    await Product.findOneAndUpdate(
-      { id: id },
-      {
-        productName,
-        brand,
-        image,
-        price,
-        quantity
-      }
-    );
-    response.status(200).json({ message: "Product updated successfully" });
+    await Product.findByIdAndUpdate(id, {
+      productName,
+      brand,
+      image,
+      price,
+    }).then((response) => {
+      console.log(response);
+    });
+
+    await response
+      .status(200)
+      .json({ message: "Product updated successfully" });
   } catch (error) {
     response.status(404).json({ message: error.message });
   }

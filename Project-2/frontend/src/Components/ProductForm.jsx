@@ -13,17 +13,24 @@ export default function ProductForm({
 }) {
   return (
     <div className="ProductForm">
-      <h3>Product Form</h3>
+        <h3>Product Form</h3>
       <form onSubmit={handleSubmit(handleOnSubmit)}>
-        <div className="form-group">
+        <div>
           <input
             type="text"
             name="productName"
-            {...(isEditing
-              ? {}
-              : register("productName", {
-                  required: "Product name is required",
-                }))}
+            {
+              // If isEditing is true, then don't register the input fields
+              ...(isEditing
+                ? {}
+                : register("productName", {
+                    required: "Product name is required",
+                    pattern: {
+                      value: /^[a-zA-Z0-9\s]+$/,
+                      message: "Product name should contain only alphabets and numbers",
+                    },
+                  }))
+            }
             value={formData.productName}
             onChange={handleOnChange}
             placeholder="Product Name"
@@ -32,16 +39,22 @@ export default function ProductForm({
             <span style={{ color: "red" }}>{errors.productName.message}</span>
           )}
         </div>
-
-        <div className="form-group">
+        <div>
           <input
             type="text"
             name="brand"
-            {...(isEditing
-              ? {}
-              : register("brand", {
-                  required: "Brand is required",
-                }))}
+            {
+              // If isEditing is true, then don't register the input fields
+              ...(isEditing
+                ? {}
+                : register("brand", {
+                    required: "Brand is required",
+                    pattern: {
+                      value: /^[a-zA-Z0-9\s]+$/,
+                      message: "Brand should contain only alphabets and numbers",
+                    },
+                  }))
+            }
             value={formData.brand}
             onChange={handleOnChange}
             placeholder="Brand"
@@ -50,17 +63,17 @@ export default function ProductForm({
             <span style={{ color: "red" }}>{errors.brand.message}</span>
           )}
         </div>
-
-        <div className="form-group">
+        <div>
           <input
             type="text"
             name="image"
-            {...(isEditing
+            { // If isEditing is true, then don't register the input fields
+                ...(isEditing
               ? {}
               : register("image", {
                   required: "Image URL is required",
                   pattern: {
-                    value: /^https?:\/\/[^\s$.?#].[^\s]*$/,
+                    value: /^https:\/\/[a-zA-Z0-9.-]+(\.[a-zA-Z]{2,})(\/.*)?$/,
                     message: "Invalid URL",
                   },
                 }))}
@@ -72,12 +85,12 @@ export default function ProductForm({
             <span style={{ color: "red" }}>{errors.image.message}</span>
           )}
         </div>
-
-        <div className="form-group">
+        <div>
           <input
             type="text"
             name="price"
-            {...(isEditing
+            { // If isEditing is true, then don't register the input fields
+                ...(isEditing
               ? {}
               : register("price", {
                   required: "Price is required",
@@ -94,9 +107,8 @@ export default function ProductForm({
             <span style={{ color: "red" }}>{errors.price.message}</span>
           )}
         </div>
-
-        <button type="submit" className="btn-primary">
-          {isEditing ? "Update Product" : "Submit"}
+        <button type="submit">
+          {isEditing ? "Edit" : "Submit"}
         </button>
       </form>
     </div>

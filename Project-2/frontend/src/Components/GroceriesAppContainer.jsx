@@ -1,79 +1,88 @@
+//importing files
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import ProductsContainer from "./ProductsContainer";
 import ProductForm from "./ProductForm";
 import CartContainer from "./CartContainer";
 import NavBar from "./NavBar";
+import { useForm } from "react-hook-form"; 
 
-// Main component
 export default function GroceriesApp() {
-  
+  // States
   const [productData, setProductData] = useState([]);
   const [productQuantity, setProductQuantity] = useState([]);
   const [cartList, setCartList] = useState([]);
-  const [isEditing, setIsEditing] = useState(false);
-  
   const [formData, setFormData] = useState({
     productName: "",
     brand: "",
     image: "",
     price: "",
   });
-  
-  // State to show messages 
-  const [statusMessage, setStatusMessage] = useState("");
-
+  const [postResponse, setPostResponse] = useState("");
+  const [isEditing, setIsEditing] = useState(false);
+  //////////////////////////////////////////
+  // useEffect
+  useEffect(() => {
+    handleProductsDB();
+  }, []);
+  //////////////////////////////////////////
+  // React Hook Form
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-
-  // Fetch products from server
-  useEffect(() => {
-    handleProductsDB();
-  }, []);
-
-  // Fetch product list from backend API
+  //////////////////////////////////////////
+  // Handlers
+  // Fetching data from the database
   const handleProductsDB = async () => {
     try {
-      const response = await axios.get("http://localhost:5000/api/products");
+      const response = await axios.get("http://localhost:3000/products");
       setProductData(response.data);
-      setProductQuantity(
-        response.data.map((product) => ({ id: product.id, quantity: 0 }))
-      ); 
+     
     } catch (error) {
       console.log(error.message);
     }
   };
 
-  // Update form state when input changes
+  // Handling form data
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle form submission for add&edit product
-  const handleOnSubmit = async (data) => {
-    try {
-      if (isEditing) {
-        await handleUpdate(formData.id); 
-      } else {
-        const productWithId = {
-          ...formData,
-          id: Date.now().toString(),
-        };
-        await axios.post("http://localhost:5000/api/products", productWithId);
-        setStatusMessage(`${formData.productName} added with ID: ${productWithId.id}`);
-        setFormData({ productName: "", brand: "", image: "", price: "" }); 
-        await handleProductsDB();
+  // Handling form submission
+const handleOnSubmit = async (e) => {
+  e.preventDefault;
+  try {
+    if (isEditing) {
+      // If isEditing is true, then update the product
+      try {
+        await handleUpdate(formData._id);
+        await setIsEditing(false); 
+        await setFormData({
+          productName: "",
+          brand: "",
+          image: "",
+          price: "",
+        });
+      } catch (error) {
+        console.log(error.message);
       }
-    } catch (error) {
-      console.log("Form error:", error.message);
+    } else {
+      // If isEditing is false, then add the product
+      await axios
+        .post("http://localhost:3000/add-product", formData)
+        .then((response) => {
+          setPostResponse(response.data.message);
+        });
+      setFormData({ productName: "", brand: "", image: "", price: "" });
     }
-  };
+  } catch (error) {
+    console.log(error.message);
+  }
+};
 
-  // Load product data into form for editing
+  // Handling edit product
   const handleEdit = async (product) => {
     setIsEditing(true);
     setFormData({
@@ -81,43 +90,38 @@ export default function GroceriesApp() {
       brand: product.brand,
       image: product.image,
       price: product.price,
-      id: product.id
+      _id: product._id,
     });
   };
 
-  // Update product data in backend
+  // Handling update product in the database by id
   const handleUpdate = async (id) => {
     try {
-      const updateData = {
-        productName: formData.productName,
-        brand: formData.brand,
-        image: formData.image,
-        price: formData.price,
-      };
-      await axios.patch(`http://localhost:5000/api/products/${id}`, updateData);
-      setStatusMessage(`${formData.productName} edited with ID: ${id}`);
-      setIsEditing(false);
-      setFormData({ productName: "", brand: "", image: "", price: "" }); 
+      await axios
+        .patch(`http://localhost:3000/products/${id}`, formData)
+        .then((response) => {
+          setPostResponse(`${formData.productName} edited with ID: ${id}`);
+        });
       await handleProductsDB();
     } catch (error) {
-      console.log("Update error:", error.message);
+      console.log(error.message);
     }
   };
 
-  // Delete product from backend
-  const handleDelete = async (id) => {
-    if (window.confirm("Are you sure you want to delete this product?")) {
-      try {
-        await axios.delete(`http://localhost:5000/api/products/${id}`);
-        setStatusMessage(`${formData.productName} deleted with ID: ${id}`);
-        await handleProductsDB();
-      } catch (error) {
-        console.log("Delete error:", error.message);
-      }
-    }
-  };
+// Handling delete product from the database by id
+const handleDelete = async (id) => {
+  try {
+    await axios
+      .delete(`http://localhost:3000/products/${id}`)
+      .then((response) => {
+        setPostResponse(response.data.message);
+      });
+     } catch (error) {
+    console.log(error.message);
+  }
+};
 
-  // Increase quantity of product 
+  // Handling add quantity to product or cart
   const handleAddQuantity = (productId, mode) => {
     if (mode === "cart") {
       const newCartList = cartList.map((product) => {
@@ -138,7 +142,7 @@ export default function GroceriesApp() {
     }
   };
 
-  // Decrease quantity of product 
+  // Handling remove quantity from product or cart
   const handleRemoveQuantity = (productId, mode) => {
     if (mode === "cart") {
       const newCartList = cartList.map((product) => {
@@ -159,13 +163,13 @@ export default function GroceriesApp() {
     }
   };
 
-  // Add selected quantity of product 
+  // Handling add product to cart
   const handleAddToCart = (productId) => {
     const product = productData.find((product) => product.id === productId);
     const pQuantity = productQuantity.find((product) => product.id === productId);
 
     if (!pQuantity || pQuantity.quantity === 0) {
-      alert(`Please select quantity for ${product.productName}`);
+      alert("Please select quantity for " + product.productName);
       return;
     }
 
@@ -181,20 +185,22 @@ export default function GroceriesApp() {
     setCartList(newCartList);
   };
 
-  // Remove product from cart
+  // Handling remove product from cart
   const handleRemoveFromCart = (productId) => {
     const newCartList = cartList.filter((product) => product.id !== productId);
     setCartList(newCartList);
   };
 
-  // Clear all items from cart
+  // Handling clear cart
   const handleClearCart = () => {
     setCartList([]);
   };
+  //////////////////////////////////////////
+  // Render
 
   return (
     <div>
-      <NavBar quantity={cartList.length} /> {/* Display total cart items */}
+      <NavBar quantity={cartList.length} />
       <div className="GroceriesApp-Container">
         <div className="left-sidebar">
           <ProductForm
@@ -206,12 +212,7 @@ export default function GroceriesApp() {
             handleSubmit={handleSubmit}
             errors={errors}
           />
-          {/* Display status messages like "added,edited or deleted" */}
-          {statusMessage && (
-            <p style={{ color: "green", marginTop: "10px", textAlign: "center" }}>
-              {statusMessage}
-            </p>
-          )}
+          <p style={{ color: "green" }}>{postResponse}</p>
         </div>
         
         <div className="center-content">

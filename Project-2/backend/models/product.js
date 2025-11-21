@@ -1,10 +1,9 @@
-// Import mongoose 
+// Initialize mongoose 
 const mongoose = require("mongoose");
 
-// Define schema for product data 
+// Define Schema fo the product model 
 const Schema = mongoose.Schema;
 
-// Product schema definition matching the JSON data 
 const productSchema = new Schema({
   id: {
     type: String,

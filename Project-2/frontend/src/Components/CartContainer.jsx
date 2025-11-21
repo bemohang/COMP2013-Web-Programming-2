@@ -11,6 +11,7 @@ export default function CartContainer({
       <h2>Cart items: {cartList.length}</h2>
       {cartList.length > 0 ? (
         <>
+          {console.log(cartList)}
           {cartList.map((product) => (
             <CartCard
               key={product.id}
@@ -25,9 +26,16 @@ export default function CartContainer({
               Empty Cart
             </button>
             <button id="BuyButton">
-       Checkout
-</button>
-
+              Checkout:{" $"}
+              {cartList
+                .reduce(
+                  (total, item) =>
+                    total +
+                    parseFloat(item.price.replace("$", "")) * item.quantity,
+                  0
+                )
+                .toFixed(2)}
+            </button>
           </div>
         </>
       ) : (

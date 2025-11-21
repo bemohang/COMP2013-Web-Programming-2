@@ -21,9 +21,9 @@ export default function ProductCard({
         handleAddQuantity={handleAddQuantity}
         handleRemoveQuantity={handleRemoveQuantity}
       />
-      <h3>{product.price}</h3>
+      <b>{product.price}</b><br></br>
       <button onClick={() => handleAddToCart(product.id)}>Add to Cart</button>
-      <div className="crud-buttons">
+      <div>
         <button onClick={() => onEdit(product)} className="edit-btn">
           Edit
         </button>
