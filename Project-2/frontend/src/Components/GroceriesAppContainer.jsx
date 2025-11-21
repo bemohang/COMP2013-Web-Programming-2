@@ -71,16 +71,17 @@ const handleOnSubmit = async (e) => {
       }
     } else {
       // If isEditing is false, then add the product
+    
       await axios
         .post("http://localhost:3000/add-product", formData)
         .then((response) => {
-          setPostResponse(response.data.message);
+          setPostResponse(`${formData.productName} added with ID: ${response.data._id}`)
         });
       setFormData({ productName: "", brand: "", image: "", price: "" });
 
-      const res = await axios.get("http://localhost:3000/products"); 
-      setProductData(res.data); 
-      setProductQuantity(res.data.map((p) => ({ id: p._id, quantity: 0 })));
+      const response = await axios.get("http://localhost:3000/products"); 
+      setProductData(response.data); 
+      setProductQuantity(response.data.map((p) => ({ id: p._id, quantity: 0 })));
     }
   } catch (error) {
     console.log(error.message);
@@ -213,14 +214,14 @@ setCartList(newCartList);
       <div className="GroceriesApp-Container">
         <div className="left-sidebar">
           <ProductForm
-            isEditing={isEditing}
-            formData={formData}
-            handleOnChange={handleOnChange}
-            handleOnSubmit={handleOnSubmit}
-            register={register}
-            handleSubmit={handleSubmit}
-            errors={errors}
-          />
+  isEditing={isEditing}
+  formData={formData}
+  handleOnChange={handleOnChange}
+  handleOnSubmit={handleOnSubmit} // <- pass the function from container
+  register={register}
+  handleSubmit={handleSubmit}     // <- handleSubmit from useForm()
+  errors={errors}
+/>
           <p style={{ color: "green" }}>{postResponse}</p>
         </div>
         

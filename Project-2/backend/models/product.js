@@ -24,11 +24,8 @@ const productSchema = new Schema({
   price: {
     type: String,
     required: true,
-  },
-  quantity: {
-    type: String,
-    required: true, 
-  }
+  } 
+  
 });
 
 // Create Product model
