@@ -8,7 +8,8 @@ function GorceriesAppContainer() {
   const [cart, setCart] = useState([]);
 
   const handleAddToCart = (product) => {
-    if (!product.quantity || product.quantity <= 0) return;
+    if (!product.quantity || product.quantity <= 0) 
+      return;
 
     const newCart = [...cart];
     let found = false;

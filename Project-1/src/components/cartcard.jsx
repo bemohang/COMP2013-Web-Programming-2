@@ -3,7 +3,7 @@ import React from 'react';
 function CartCard({ item, onRemove, onQuantityChange }) {
   const handleRemove = () => onRemove(item.id);
 
-  const itemPrice = Number(item.price.replace("$", "").replace(",", "")) || 0;
+  const itemPrice = Number(item.price.replace("$", "").replace(",", ""));
   const itemTotal = (itemPrice * item.quantity);
 
   return (
@@ -25,7 +25,7 @@ function CartCard({ item, onRemove, onQuantityChange }) {
           <button
             className="QuantityBtn"
             onClick={() => onQuantityChange(item.id, item.quantity + 1)}
-          >
+          > 
             +
           </button>
         </div>

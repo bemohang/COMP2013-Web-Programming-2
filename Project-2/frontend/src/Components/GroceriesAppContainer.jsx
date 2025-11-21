@@ -20,19 +20,16 @@ export default function GroceriesApp() {
   });
   const [postResponse, setPostResponse] = useState("");
   const [isEditing, setIsEditing] = useState(false);
-  //////////////////////////////////////////
   // useEffect
   useEffect(() => {
     handleProductsDB();
   }, []);
-  //////////////////////////////////////////
   // React Hook Form
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  //////////////////////////////////////////
   // Handlers
   // Fetching data from the database
   const handleProductsDB = async () => {
@@ -205,9 +202,8 @@ setCartList(newCartList);
   const handleClearCart = () => {
     setCartList([]);
   };
-  //////////////////////////////////////////
+ 
   // Render
-
   return (
     <div>
       <NavBar quantity={cartList.length} />
@@ -217,9 +213,9 @@ setCartList(newCartList);
   isEditing={isEditing}
   formData={formData}
   handleOnChange={handleOnChange}
-  handleOnSubmit={handleOnSubmit} // <- pass the function from container
+  handleOnSubmit={handleOnSubmit} 
   register={register}
-  handleSubmit={handleSubmit}     // <- handleSubmit from useForm()
+  handleSubmit={handleSubmit}    
   errors={errors}
 />
           <p style={{ color: "green" }}>{postResponse}</p>
