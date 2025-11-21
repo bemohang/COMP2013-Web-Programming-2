@@ -72,7 +72,7 @@ const handleOnSubmit = async (e) => {
       await axios
         .post("http://localhost:3000/add-product", formData)
         .then((response) => {
-          setPostResponse(`${formData.productName} added with ID: ${response.data._id}`)
+          setPostResponse(`${formData.productName} added with ID: ${crypto.randomUUID()}`)
         });
       setFormData({ productName: "", brand: "", image: "", price: "" });
 
