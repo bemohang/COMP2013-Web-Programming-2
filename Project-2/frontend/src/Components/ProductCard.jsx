@@ -10,8 +10,6 @@ export default function ProductCard({
   onDelete,
 }) {
 
-  // Prevent crash if product is undefined
-  if (!product) return null;
 
   return (
     <div className="ProductCard">
