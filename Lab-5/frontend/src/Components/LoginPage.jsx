@@ -26,7 +26,7 @@ export default function LoginPage() {
       });
       setPostResponse(response.data.message);
       if (response.status === 201) {
-        navigate("/private");
+        navigate("/contacts");
         Cookies.set("jwt-authorization", response.data.token);
       }
     } catch (error) {
