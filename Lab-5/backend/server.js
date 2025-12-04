@@ -4,13 +4,12 @@ const server = express();
 const port = 5000;
 const mongoose = require("mongoose"); //import mongoose
 require("dotenv").config(); //import dotenv
-const { DB_URI, SECRET_KEY } = process.env; //to grab the same variable from the dotenv file
+const { DB_URI, SECRET_KEY } = process.env; 
 const cors = require("cors"); //For disabling default browser security
 const Contact = require("./models/contact"); //importing the model schema
 
-
 // New imports for users
-const User = require("./models/user"); // added for users
+const User = require("./models/user"); 
 const bcrypt = require("bcrypt");       
 const jwt = require("jsonwebtoken");    
 
@@ -42,10 +41,6 @@ server.post("/register", async (request, response) => {
   const { username, password } = request.body;
   try {
     const existingUser = await User.findOne({ username });
-    if (existingUser)
-      return response
-        .status(400)
-        .send({ message: "Username already exists" });
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = new User({

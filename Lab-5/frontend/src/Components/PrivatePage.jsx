@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function PrivatePage() {
   const [currentUser, setCurrentUser] = useState(() => {
     const jwtToken = Cookies.get("jwt-authorization");
-    if (!jwtToken) return ""; // No token found
+    if (!jwtToken) return ""; 
     try {
       const decodedToken = jwtDecode(jwtToken);
       return decodedToken.username || "";

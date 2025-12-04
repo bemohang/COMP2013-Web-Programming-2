@@ -12,18 +12,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Private routes wrapper */}
         <Route element={<PrivateRoute />}>
           <Route path="/private" element={<PrivatePage />} />
         </Route>
 
-        {/* Public routes */}
         <Route path="/" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/not-authorized" element={<NotAuthorized />} />
 
-        {/* Catch-all route */}
         <Route path="*" element={<PageNotFound />} />
       </Routes>
     </Router>
